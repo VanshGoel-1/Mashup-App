@@ -1,0 +1,9 @@
+zipfile36
+Flask
+Flask-Mail
+yt-dlp
+moviepy
+ffmpeg-python
+soundfile
+numpy
+pytest
