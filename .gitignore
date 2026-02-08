@@ -1,0 +1,26 @@
+
+# Environment Variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Videos/Audio Output
+*.mp3
+*.mp4
+*.zip
+*.webm
+
+# Temporary Files
+tmp/
+temp/
