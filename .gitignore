@@ -46,3 +46,7 @@ Thumbs.db
 # Temporary Files
 tmp/
 temp/
+
+# Personal Files
+resume_points.md
+ats_resume_points.md

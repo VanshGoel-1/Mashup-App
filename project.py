@@ -1,16 +1,12 @@
 import os
 import yt_dlp
 import time
-from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.audio.AudioClip import concatenate_audioclips
-from moviepy.audio.AudioClip import AudioArrayClip
-import numpy as np
 import zipfile
 from flask import Flask, request, render_template, jsonify
 from flask_mail import Mail, Message
 import ffmpeg
-import soundfile as sf
 import tempfile
 from dotenv import load_dotenv
 from flask_cors import CORS
