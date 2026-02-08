@@ -28,7 +28,11 @@ def test_valid_input():
 def test_download_video_success(mock_dl):
     # Setup mock
     instance = mock_dl.return_value.__enter__.return_value
-    instance.extract_info.return_value = {'entries': [1, 2, 3]}
+    instance.extract_info.return_value = {'entries': [
+        {'uploader': 'Singer VEVO', 'title': 'Song 1', 'view_count': 100, 'url': 'http://vid1'},
+        {'uploader': 'Singer Official', 'title': 'Song 2', 'view_count': 200, 'webpage_url': 'http://vid2'},
+        {'uploader': 'Singer Topic', 'title': 'Song 3', 'view_count': 50, 'url': 'http://vid3'}
+    ]}
     
     with tempfile.TemporaryDirectory() as temp_dir:
         count = download_video("Singer", 3, temp_dir)

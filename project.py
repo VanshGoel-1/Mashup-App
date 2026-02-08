@@ -64,26 +64,91 @@ def download_video(singer, number_of_videos, download_path, max_retries=3, retry
         'quiet': True,
     }
 
-    search_url = f"ytsearch{number_of_videos}:{singer}"
-    for attempt in range(max_retries):
-        try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                result = ydl.extract_info(search_url, download=True)
-                # Check for 'entries' in result (playlist) or result itself (single video)
-                if 'entries' in result:
-                     num_downloaded = len(result['entries'])
-                else:
-                     num_downloaded = 1
+def download_video(singer, number_of_videos, download_path, max_retries=3, retry_delay=5):
+    # 1. Fetch Metadata (Search for more candidates to find the best ones)
+    search_limit = max(50, number_of_videos * 5) # Search for more to allow filtering
+    ydl_opts_meta = {
+        'extract_flat': True, # Don't download, just get metadata
+        'quiet': True,
+        'noplaylist': True,
+    }
+    
+    search_query = f"ytsearch{search_limit}:{singer}"
+    entries = []
+    
+    print(f"Searching for top videos by {singer}...")
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts_meta) as ydl:
+            result = ydl.extract_info(search_query, download=False)
+            if 'entries' in result:
+                entries = result['entries']
+            else:
+                entries = [result]
+    except Exception as e:
+        print(f"Error fetching metadata: {e}")
+        return 0
 
-                if num_downloaded > 0:
-                    return num_downloaded
+    if not entries:
+        return 0
 
-        except Exception as e:
-            print(f"Download attempt {attempt + 1} failed: {e}")
-            if attempt < max_retries - 1:
-                time.sleep(retry_delay)
+    # 2. Filter for "Original Artist" (Basic Fuzzy Matching)
+    # We prioritize videos where the uploader name is similar to the singer name
+    # or contains "topic", "vevo", "official". 
+    # Since strict strict matching is hard, we filter for presence of singer name in uploader OR title
+    # But to satisfy "Original Artist channel", we look at the 'uploader'.
+    
+    filtered_entries = []
+    singer_lower = singer.lower()
+    
+    for entry in entries:
+        uploader = entry.get('uploader', '').lower()
+        title = entry.get('title', '').lower()
+        
+        # Criteria: Singer name in uploader (e.g. "Arijit Singh", "Arijit Singh Official")
+        # OR Singer name in title AND uploader has "VEVO" or "Topic"
+        if singer_lower in uploader:
+             filtered_entries.append(entry)
+        elif singer_lower in title and ('vevo' in uploader or 'topic' in uploader or 'official' in uploader):
+             filtered_entries.append(entry)
+             
+    # Fallback: If strict filtering removes everything, use original entries but warn
+    if not filtered_entries:
+        print("Warning: Could not strictly verify original artist channels. Using best matches.")
+        filtered_entries = entries
 
-    return 0
+    # 3. Sort by Views (Most Played)
+    # yt-dlp flat extraction sometimes doesn't get view_count depending on backend, 
+    # strictly speaking 'view_count' might be None or missing. 
+    # We treat missing as 0.
+    filtered_entries.sort(key=lambda x: x.get('view_count') or 0, reverse=True)
+    
+    # 4. Select Top N
+    selected_entries = filtered_entries[:number_of_videos]
+    
+    # 5. Download Selected Videos
+    print(f"Selected {len(selected_entries)} videos:")
+    for v in selected_entries:
+        print(f"- {v.get('title')} (Views: {v.get('view_count')}, Uploader: {v.get('uploader')})")
+
+    download_count = 0
+    ydl_opts_download = {
+        'format': 'bestaudio/best',
+        'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
+        'noplaylist': True,
+        'quiet': True,
+    }
+    
+    with yt_dlp.YoutubeDL(ydl_opts_download) as ydl:
+        for entry in selected_entries:
+            try:
+                # Use weburl or id
+                url = entry.get('url') or entry.get('webpage_url')
+                ydl.download([url])
+                download_count += 1
+            except Exception as e:
+                print(f"Failed to download {entry.get('title')}: {e}")
+
+    return download_count
 
 def convert(download_path, duration, start_time_seconds=20):
     audio_file_paths = []
