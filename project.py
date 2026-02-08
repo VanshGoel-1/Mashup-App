@@ -72,7 +72,12 @@ def download_video(singer, number_of_videos, download_path, max_retries=3, retry
         'quiet': True,
         'noplaylist': True,
         # Enable Node.js (found on system) to fix missing JS runtime warning
-        'js_runtimes': {'node': {}, 'deno': {}},
+        'js_runtimes': {
+            'node': {'path': 'C:/Program Files/nodejs/node.exe'},
+            'deno': {}
+        },
+        # Check for cookies.txt in current directory
+        'cookiefile': 'cookies.txt' if os.path.exists('cookies.txt') else None,
     }
     
     search_query = f"ytsearch{search_limit}:{singer}"
@@ -138,7 +143,11 @@ def download_video(singer, number_of_videos, download_path, max_retries=3, retry
         'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
         'noplaylist': True,
         'quiet': True,
-        'js_runtimes': {'node': {}, 'deno': {}},
+        'js_runtimes': {
+            'node': {'path': 'C:/Program Files/nodejs/node.exe'},
+            'deno': {}
+        },
+        'cookiefile': 'cookies.txt' if os.path.exists('cookies.txt') else None,
     }
     
     with yt_dlp.YoutubeDL(ydl_opts_download) as ydl:
