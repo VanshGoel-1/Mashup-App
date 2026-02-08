@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .container {
             background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
@@ -24,7 +25,7 @@
             max-width: 500px;
             backdrop-filter: blur(10px);
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 2rem;
@@ -34,23 +35,23 @@
             border-radius: 15px;
             margin: -2rem -2rem 2rem -2rem;
         }
-        
+
         .header h1 {
             margin: 0;
             font-size: 1.8rem;
             font-weight: 600;
         }
-        
+
         .header p {
             margin: 0.5rem 0 0 0;
             opacity: 0.9;
             font-size: 0.9rem;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: flex;
             align-items: center;
@@ -58,7 +59,7 @@
             margin-bottom: 0.5rem;
             color: #333;
         }
-        
+
         .form-group label::before {
             content: '';
             width: 20px;
@@ -66,12 +67,23 @@
             margin-right: 8px;
             background-size: contain;
         }
-        
-        .artist-label::before { content: '🎤'; }
-        .videos-label::before { content: '🎬'; }
-        .duration-label::before { content: '⏱️'; }
-        .email-label::before { content: '📧'; }
-        
+
+        .artist-label::before {
+            content: '🎤';
+        }
+
+        .videos-label::before {
+            content: '🎬';
+        }
+
+        .duration-label::before {
+            content: '⏱️';
+        }
+
+        .email-label::before {
+            content: '📧';
+        }
+
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -81,19 +93,19 @@
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
-        
+
         .form-group input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-        
+
         .form-group .help-text {
             font-size: 0.85rem;
             color: #666;
             margin-top: 0.25rem;
         }
-        
+
         .submit-btn {
             width: 100%;
             padding: 15px;
@@ -108,22 +120,22 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
-        
+
         .submit-btn:active {
             transform: translateY(0);
         }
-        
+
         .submit-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         .loading {
             display: none;
             text-align: center;
@@ -133,7 +145,7 @@
             border-radius: 10px;
             border-left: 4px solid #667eea;
         }
-        
+
         .message {
             padding: 1rem;
             border-radius: 10px;
@@ -141,13 +153,13 @@
             font-weight: 500;
             display: none;
         }
-        
+
         .message.success {
             background: #d4edda;
             color: #155724;
             border-left: 4px solid #28a745;
         }
-        
+
         .message.error {
             background: #f8d7da;
             color: #721c24;
@@ -155,95 +167,110 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>🎵 Audio Mashup Generator</h1>
             <p>Create personalized audio mashups from your favorite artist's videos</p>
         </div>
-        
+
         <form id="mashupForm">
             <div class="form-group">
                 <label for="singer" class="artist-label">Artist/Singer Name</label>
-                <input type="text" id="singer" name="singer" required placeholder="e.g., Ed Sheeran">
+                <input type="text" id="singer" name="singer" required placeholder="e.g., Arijit Singh">
                 <div class="help-text">Enter the name of your favorite artist</div>
             </div>
-            
+
             <div class="form-group">
                 <label for="number_of_videos" class="videos-label">Number of Videos</label>
                 <input type="number" id="number_of_videos" name="number_of_videos" min="1" max="20" value="5" required>
                 <div class="help-text">Choose between 1-20 videos (recommended: 5-10)</div>
             </div>
-            
+
             <div class="form-group">
                 <label for="duration" class="duration-label">Duration per Song (seconds)</label>
                 <input type="number" id="duration" name="duration" min="1" max="120" value="15" required>
                 <div class="help-text">Duration of each song segment (5-120 seconds)</div>
             </div>
-            
+
             <div class="form-group">
                 <label for="email" class="email-label">Email Address</label>
                 <input type="email" id="email" name="email" required placeholder="your.email@example.com">
                 <div class="help-text">We'll send your mashup to this email address</div>
             </div>
-            
+
             <button type="submit" class="submit-btn" id="submitBtn">
                 🚀 Generate Mashup
             </button>
         </form>
-        
+
         <div class="loading" id="loadingMessage">
             <h3>🎶 Creating your mashup...</h3>
             <p>This may take a few minutes. Please don't close this page.</p>
             <div style="margin-top: 10px;">
-                <div style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #667eea; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both;"></div>
-                <div style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #667eea; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; animation-delay: -0.32s;"></div>
-                <div style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #667eea; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; animation-delay: -0.16s;"></div>
+                <div
+                    style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #667eea; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both;">
+                </div>
+                <div
+                    style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #667eea; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; animation-delay: -0.32s;">
+                </div>
+                <div
+                    style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #667eea; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both; animation-delay: -0.16s;">
+                </div>
             </div>
         </div>
-        
+
         <div class="message" id="messageDiv"></div>
     </div>
-    
+
     <style>
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
         }
     </style>
-    
+
     <script>
-        document.getElementById('mashupForm').addEventListener('submit', async function(e) {
+        document.getElementById('mashupForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const submitBtn = document.getElementById('submitBtn');
             const loadingMessage = document.getElementById('loadingMessage');
             const messageDiv = document.getElementById('messageDiv');
-            
+
             // Reset messages
             messageDiv.style.display = 'none';
             messageDiv.className = 'message';
-            
+
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.textContent = 'Generating...';
             loadingMessage.style.display = 'block';
-            
+
             // Collect form data
             const formData = new FormData();
             formData.append('singer', document.getElementById('singer').value);
             formData.append('number_of_videos', document.getElementById('number_of_videos').value);
             formData.append('duration', document.getElementById('duration').value);
             formData.append('email', document.getElementById('email').value);
-            
+
             try {
                 const response = await fetch('/generate_mashup', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     messageDiv.textContent = result.message || 'Mashup generated successfully!';
                     messageDiv.className = 'message success';
@@ -265,4 +292,5 @@
         });
     </script>
 </body>
+
 </html>

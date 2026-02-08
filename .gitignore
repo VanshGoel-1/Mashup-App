@@ -6,6 +6,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.log
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
 
 # Pytest
 .pytest_cache/
@@ -15,11 +21,27 @@ venv/
 env/
 .venv/
 
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # Videos/Audio Output
 *.mp3
 *.mp4
 *.zip
 *.webm
+*.wav
 
 # Temporary Files
 tmp/
