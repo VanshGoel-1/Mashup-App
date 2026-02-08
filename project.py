@@ -71,6 +71,8 @@ def download_video(singer, number_of_videos, download_path, max_retries=3, retry
         'extract_flat': True, # Don't download, just get metadata
         'quiet': True,
         'noplaylist': True,
+        # Enable Node.js (found on system) to fix missing JS runtime warning
+        'js_runtimes': {'node': {}, 'deno': {}},
     }
     
     search_query = f"ytsearch{search_limit}:{singer}"
@@ -136,6 +138,7 @@ def download_video(singer, number_of_videos, download_path, max_retries=3, retry
         'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
         'noplaylist': True,
         'quiet': True,
+        'js_runtimes': {'node': {}, 'deno': {}},
     }
     
     with yt_dlp.YoutubeDL(ydl_opts_download) as ydl:
